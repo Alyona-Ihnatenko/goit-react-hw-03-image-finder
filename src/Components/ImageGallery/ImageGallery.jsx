@@ -20,15 +20,15 @@ class ImageGallery extends Component {
     modalHit: {},
   };
 
-  async componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps, prevState) {
     if (prevProps.query !== this.props.query) {
       this.resetState();
       this.loadImages();
     }
 
     if (prevState.page !== this.state.page && this.state.page > 1) {
-      await this.loadMoreImages();
-      this.autoScroll();
+      this.loadImages();
+      //  this.autoScroll();
     }
   }
 
@@ -39,31 +39,10 @@ class ImageGallery extends Component {
 
       this.setState({ loader: true });
       const response = await apiService(query, page);
-
-      this.setState({
-        hits: response.data.hits,
-      });
-
-      if (response.data.hits.length === 0) {
-        return toast.warn('Oops, such item has not found');
-      }
-    } catch (error) {
-      console.log(error);
-      return toast.error('Error while loading data. Try again later');
-    } finally {
-      this.setState({ loader: false });
-    }
-  };
-
-  loadMoreImages = async () => {
-    try {
-      const { query } = this.props;
-      const { page } = this.state;
-
-      this.setState({ loader: true });
-
-      const response = await apiService(query, page);
-
+      // if(page===1)
+      // { this.setState({
+      //   hits: response.data.hits,
+      // });}
       this.setState(prevState => ({
         hits: [...prevState.hits, ...response.data.hits],
       }));
@@ -71,6 +50,11 @@ class ImageGallery extends Component {
       if (response.data.hits.length === 0) {
         return toast.warn('Oops, such item has not found');
       }
+
+      if (page > 1) {
+        this.autoScroll();
+      }
+      //
     } catch (error) {
       console.log(error);
       return toast.error('Error while loading data. Try again later');
@@ -78,6 +62,31 @@ class ImageGallery extends Component {
       this.setState({ loader: false });
     }
   };
+
+  // loadMoreImages = async () => {
+  //   try {
+  //     const { query } = this.props;
+  //     const { page } = this.state;
+
+  //     this.setState({ loader: true });
+
+  //     const response = await apiService(query, page);
+
+  //     this.setState(prevState => ({
+  //       hits: [...prevState.hits, ...response.data.hits],
+  //     }));
+
+  //     if (response.data.hits.length === 0) {
+  //       return toast.warn('Oops, such item has not found');
+  //     }
+
+  //   } catch (error) {
+  //     console.log(error);
+  //     return toast.error('Error while loading data. Try again later');
+  //   } finally {
+  //     this.setState({ loader: false });
+  //   }
+  // };
 
   autoScroll = () => {
     window.scrollTo({
@@ -143,5 +152,4 @@ class ImageGallery extends Component {
 ImageGallery.propTypes = {
   query: PropTypes.string,
 };
-
 export { ImageGallery };
