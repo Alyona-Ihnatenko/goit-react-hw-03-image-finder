@@ -1,13 +1,12 @@
-
 import PropTypes from 'prop-types';
 import { Component } from 'react';
 import { toast } from 'react-toastify';
-import{ apiService} from '../servises/apiServise';
-import {Button} from '../Button/Button';
-import{ Loader} from '../Loader/Loader';
-import {Modal} from '../Modal/Modal';
+import { apiService } from '../servises/apiServise';
+import { Button } from '../Button/Button';
+import { Loader } from '../Loader/Loader';
+import { Modal } from '../Modal/Modal';
 import css from '../ImageGallery/ImageGallery.module.css';
-import {ImageGalleryItem} from '../ImageGalleryItem/ImageGalleryItem';
+import { ImageGalleryItem } from '../ImageGalleryItem/ImageGalleryItem';
 
 class ImageGallery extends Component {
   // static API_KEY = '22389180-c3e3825fb04f5ed43216d445d';
@@ -145,4 +144,4 @@ ImageGallery.propTypes = {
   query: PropTypes.string,
 };
 
-export { ImageGallery};
+export { ImageGallery };
