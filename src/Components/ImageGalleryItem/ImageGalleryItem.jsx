@@ -1,7 +1,5 @@
-
 import PropTypes from 'prop-types';
 import css from '../ImageGalleryItem/ImageGalleryItem.module.css';
-
 
 function ImageGalleryItem(props) {
   const { webformatURL, tags } = props.hit;
@@ -11,6 +9,7 @@ function ImageGalleryItem(props) {
     <li className={css.item}>
       <img
         width="600"
+        height="300"
         src={webformatURL}
         alt={tags}
         className={css.ImageGalleryItemImage}
@@ -25,4 +24,4 @@ ImageGalleryItem.propTypes = {
   showModal: PropTypes.func,
 };
 
-export  {ImageGalleryItem};
+export { ImageGalleryItem };

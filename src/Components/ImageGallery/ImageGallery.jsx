@@ -15,20 +15,20 @@ class ImageGallery extends Component {
   state = {
     hits: [],
     page: 1,
-    loader: false,
-    modal: false,
+    isLoader: false,
+    isModal: false,
     modalHit: {},
   };
 
-  componentDidUpdate(prevProps, prevState) {
+  async componentDidUpdate(prevProps, prevState) {
     if (prevProps.query !== this.props.query) {
       this.resetState();
       this.loadImages();
     }
 
     if (prevState.page !== this.state.page && this.state.page > 1) {
-      this.loadImages();
-      //  this.autoScroll();
+      await this.loadImages();
+      this.autoScroll();
     }
   }
 
@@ -37,29 +37,28 @@ class ImageGallery extends Component {
       const { query } = this.props;
       const { page } = this.state;
 
-      this.setState({ loader: true });
+      this.setState({ isLoader: true });
       const response = await apiService(query, page);
-      // if(page===1)
-      // { this.setState({
-      //   hits: response.data.hits,
-      // });}
-      this.setState(prevState => ({
-        hits: [...prevState.hits, ...response.data.hits],
-      }));
-
+      if (page === 1) {
+        this.setState({
+          hits: response.data.hits,
+        });
+      } else {
+        this.setState(prevState => ({
+          hits: [...prevState.hits, ...response.data.hits],
+        }));
+      }
+      // if (page > 1) {
+      //   this.autoScroll();
+      //  this.autoScroll();
       if (response.data.hits.length === 0) {
         return toast.warn('Oops, such item has not found');
       }
-
-      if (page > 1) {
-        this.autoScroll();
-      }
-      //
     } catch (error) {
       console.log(error);
       return toast.error('Error while loading data. Try again later');
     } finally {
-      this.setState({ loader: false });
+      this.setState({ isLoader: false });
     }
   };
 
@@ -110,25 +109,25 @@ class ImageGallery extends Component {
 
   showModal = data => {
     this.setState({
-      modal: true,
+      isModal: true,
       modalHit: data,
     });
   };
 
   hideModal = () => {
     this.setState({
-      modal: false,
+      isModal: false,
       modalHit: {},
     });
   };
 
   render() {
-    const { hits, loader, modal, modalHit } = this.state;
+    const { hits, isLoader, isModal, modalHit } = this.state;
 
     return (
       <main>
-        {loader && <Loader />}
-        {modal && (
+        {isLoader && <Loader />}
+        {isModal && (
           <Modal onClose={this.hideModal}>
             <img src={modalHit.largeImageURL} alt={modalHit.tags} />
           </Modal>
